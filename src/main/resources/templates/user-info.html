@@ -35,9 +35,27 @@
     <input type="hidden" th:field="*{id}">
 
     <div class="form-floating mb-3">
-      <input type="text" class="form-control" th:field="*{username}" id="floatingUserame"
+      <input type="text" class="form-control" th:field="*{firstName}" id="floatingName"
              placeholder="Ivan">
-      <label for="floatingName">Username</label>
+      <label for="floatingName">First name</label>
+    </div>
+
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" th:field="*{lastName}" id="floatingLastName"
+             placeholder="Ivan">
+      <label for="floatingLastName">Last name</label>
+    </div>
+
+    <div class="form-floating mb-3">
+      <input type="number" class="form-control" th:field="*{age}" id="floatingAge"
+             placeholder="18">
+      <label for="floatingAge">Year</label>
+    </div>
+
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" th:field="*{email}" id="floatingEmail"
+             placeholder="Ivan">
+      <label for="floatingEmail">Email</label>
     </div>
 
     <div class="form-floating mb-3">
@@ -47,32 +65,13 @@
     </div>
 
     <div class="form-floating mb-3">
-
-        <input type="text" class="form-control" th:field="*{roles}" id="floatingRoles"
-               placeholder="Ivan">
-        <label  for="floatingName">Role</label>
-    </div>
-
-    <div class="form-floating mb-3">
-      <input type="text" class="form-control" th:field="*{name}" id="floatingName"
-             placeholder="Ivan">
-      <label for="floatingName">Name</label>
-    </div>
-
-    <div class="form-floating mb-3">
-      <input type="text" class="form-control" th:field="*{surname}" id="floatingSurname"
-             placeholder="Ivan">
-      <label for="floatingSurname">Surname</label>
-    </div>
-
-    <div class="form-floating mb-3">
-      <input type="number" class="form-control" th:field="*{yearOfBirth}" id="floatingYear"
-             placeholder="Ivan">
-      <label for="floatingYear">Year</label>
+      <th:block th:each="role: ${listRoles}">
+        <input type="checkbox" th:field="*{roles}"
+               th:text="${role.name}" th:value="${role.id}" class="m-2" id="roles"/>
+      </th:block>
     </div>
 
     <button type="submit" class="btn btn-primary">Save</button>
-
 
   </form>
 </div>

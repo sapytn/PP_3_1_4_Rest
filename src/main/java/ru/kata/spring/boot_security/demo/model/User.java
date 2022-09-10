@@ -11,8 +11,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import lombok.Data;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "users")
@@ -23,16 +21,20 @@ public class User {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  private String username;
+  @Column(nullable = false, unique = true, length = 45)
+  private String email;
 
+  @Column(nullable = false, length = 64)
   private String password;
 
-  private String name;
+  @Column(name = "first_name", nullable = false, length = 20)
+  private String firstName;
 
-  private String surname;
+  @Column(name = "last_name", nullable = false, length = 20)
+  private String lastName;
 
-  @Column(name = "year")
-  private int yearOfBirth;
+  @Column(nullable = false)
+  private int age;
 
   @ManyToMany
   @JoinTable(name = "users_roles",
@@ -40,13 +42,22 @@ public class User {
     inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Collection<Role> roles;
 
+  public void addRole(Role role) {
+    this.roles.add(role);
+  }
+
   public User() {
 
   }
 
-  public User(String name, String surname, int yearOfBirth) {
-    this.name = name;
-    this.surname = surname;
-    this.yearOfBirth = yearOfBirth;
+  public User(long id, String email, String password, String firstName, String lastName, int age,
+      Collection<Role> roles) {
+    this.id = id;
+    this.email = email;
+    this.password = password;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.age = age;
+    this.roles = roles;
   }
 }

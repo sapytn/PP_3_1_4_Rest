@@ -4,53 +4,252 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>admin</title>
+  <title>Admin panel</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
         rel="stylesheet"
         integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
         crossorigin="anonymous">
 </head>
 <body>
-<div class="container">
-  <div sec:authorize="isAuthenticated()">
-    <h2 class="display-2">Logged in user:[[${#httpServletRequest.remoteUser}]]</h2>
-    <br>
-    <form th:action="@{/logout}" method="POST">
-      <input type="submit" class="btn btn-primary" value="Logout"/>
-    </form>
-    <br>
-  </div>
-  <h2 class="display-2">All Users</h2>
-  <br>
-  <div class="container">
-    <table class="table table-responsive-sm">
-      <thead>
-      <tr class="table-dark">
-        <th scope="col">ID</th>
-        <th scope="col">Name</th>
-        <th scope="col">Surname</th>
-        <th scope="col">Year</th>
-        <th scope="col">Action</th>
-      </tr>
-      </thead>
-      <tbody class="table table-striped">
-      <tr th:each="user: ${users}">
-        <td th:text="${user.getId()}"></td>
-        <td th:text="${user.getName()}"/>
-        <td th:text="${user.getSurname()}"/>
-        <td th:text="${user.getYearOfBirth()}"/>
-        <td>
-          <a th:href="@{admin/edit/{id}(id=${user.getId()})}">edit</a>
-          <a th:href="@{admin/delete/{id}(id=${user.getId()})}">delete</a>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-  <br>
+<div class="">
 
-  <input type="button" value="add user" class="btn btn-primary"
-         onclick="window.location.href = 'admin/addUser'"/>
+  <nav class="navbar navbar-dark bg-dark p-2">
+    <div class="container-fluid">
+      <div color="white" class="text-light">
+        <b th:text="${user.getEmail()}"/> with roles:
+        <th:block th:each="userRole: ${user.getRoles()}">
+          <label th:text="${userRole.name}"/>
+        </th:block>
+      </div>
+      <a class="nav-link active text-secondary" aria-current="page" href="/logout">Logout</a>
+
+    </div>
+  </nav>
+
+  <div class="row container-fluid vh-100 g-0">
+
+    <div class="col-sm row p-2 sidebar">
+      <div class="d-flex">
+        <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist"
+             aria-orientation="vertical">
+          <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill"
+                  data-bs-target="#v-pills-home" type="button" role="tab"
+                  aria-controls="v-pills-home"
+                  aria-selected="true" th:href="@{/admin}"><a th:href="@{/admin}"></a>Admin
+          </button>
+          <button class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill"
+                  data-bs-target="#v-pills-profile" type="button" role="tab"
+                  aria-controls="v-pills-profile" aria-selected="false"><a th:href="@{/user}"></a>User
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-10 p-3 bg-light">
+      <div class="tab-content" id="v-pills-tabContent">
+        <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
+             aria-labelledby="v-pills-home-tab" tabindex="0">
+          <h1>Admin panel</h1>
+          <div class="">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="userTable-tab" data-bs-toggle="tab"
+                        data-bs-target="#userTable-tab-pane" type="button" role="tab"
+                        aria-controls="userTable-tab-pane" aria-selected="true">Users Table
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="newUser-tab" data-bs-toggle="tab"
+                        data-bs-target="#newUser-tab-pane" type="button" role="tab"
+                        aria-controls="newUser-tab-pane" aria-selected="false">New User
+                </button>
+              </li>
+            </ul>
+            <div class="tab-content bg-white border" id="myTabContent">
+              <div class="tab-pane fade show active" id="userTable-tab-pane" role="tabpanel"
+                   aria-labelledby="userTable-tab" tabindex="0">
+                <div class="">
+                  <div class="container-fluid bg-light border-bottom">
+                    <h5 class="p-2">All users</h5>
+                  </div>
+                  <div class="p-3">
+                    <table class="table table-striped">
+                      <thead class="border-top">
+                      <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">First Name</th>
+                        <th scope="col">Last Name</th>
+                        <th scope="col">Age</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr th:each="userList: ${users}">
+                        <td th:text="${userList.getId()}"></td>
+                        <td th:text="${userList.getFirstName()}"/>
+                        <td th:text="${userList.getLastName()}"/>
+                        <td th:text="${userList.getAge()}"/>
+                        <td th:text="${userList.getEmail()}"/>
+                        <td>
+                          <th:block th:each="role: ${userList.getRoles()}">
+                            <label th:text="${role.name}"/>
+                          </th:block>
+                        </td>
+                        <td>
+                          <button type="button" class="btn btn-info text-light btn-sm"
+                                  th:action="@{admin/edit/{id}(id=${user.getId()})}">
+                            Edit
+                          </button>
+                        </td>
+                        <td>
+                          <button type="button" class="btn btn-danger btn-sm">
+                            <a class="active text-white"
+                               th:href="@{admin/delete/{id}(id=${user.getId()})}">Delete</a>
+                          </button>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="newUser-tab-pane" role="tabpanel"
+                   aria-labelledby="newUser-tab"
+                   tabindex="0">
+                <div class="container-fluid bg-light border-bottom">
+                  <h5 class="p-2">Add new user</h5>
+                </div>
+                <div class="p-3 col-4 mx-auto text-center">
+                  <form th:method="POST" th:action="@{/admin}" th:object="${newUser}">
+
+                    <input type="hidden" th:field="*{id}">
+
+                    <div class="mb-3">
+                      <label class="form-label" for="formControlName"><b>First name</b></label>
+                      <input type="text" class="form-control" th:field="*{firstName}"
+                             id="formControlName"
+                             placeholder="Ivan"/>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="floatingLastName">Last name</label>
+                      <input type="text" class="form-control" th:field="*{lastName}"
+                             id="floatingLastName"
+                             placeholder="Ivanov"/>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="floatingAge">Age</label>
+                      <input type="number" class="form-control" th:field="*{age}" id="floatingAge"
+                             placeholder="18"/>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="floatingEmail">Email</label>
+                      <input type="email" class="form-control" th:field="*{email}"
+                             id="floatingEmail"
+                             placeholder="ivanov@mail.ru"/>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="floatingPassword">Password</label>
+                      <input type="password" class="form-control" th:field="*{password}"
+                             id="floatingPassword"
+                             placeholder="password"/>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label" for="formControlRole">Role</label>
+                      <select class="form-select" multiple aria-label="formControlRole"
+                              id="formControlRole">
+                        <th:block th:each="role: ${listRoles}">
+                          <option selected th:field="*{roles}"
+                                  th:text="${role.name}" th:value="${role.id}"/>
+                        </th:block>
+                      </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-success">Add new user</button>
+
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="v-pills-profile" role="tabpanel"
+             aria-labelledby="v-pills-profile-tab" tabindex="0">
+          <h1>User information-page</h1>
+          <div class="bg-white border">
+            <div class="container-fluid bg-light border-bottom">
+              <h5 class="p-2">About user</h5>
+            </div>
+            <div class="p-3">
+              <table class="table table-striped">
+                <thead class="border-top">
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">First Name</th>
+                  <th scope="col">Last Name</th>
+                  <th scope="col">Age</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Role</th>
+                </tr>
+                </thead>
+                <tbody class="table table-striped">
+                <tr>
+                  <td th:text="${user.getId()}"/>
+                  <td th:text="${user.getFirstName()}"/>
+                  <td th:text="${user.getLastName()}"/>
+                  <td th:text="${user.getAge()}"/>
+                  <td th:text="${user.getEmail()}"/>
+                  <td>
+                    <th:block th:each="role: ${user.getRoles()}">
+                      <label th:text="${role.name}"/>
+                    </th:block>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<script async src="https://cdn.jsdelivr.net/npm/es-module-shims@1/dist/es-module-shims.min.js"
+        crossorigin="anonymous"></script>
+<script type="importmap">
+    {
+      "imports": {
+        "@popperjs/core": "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js",
+        "bootstrap": "https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.esm.min.js"
+      }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+<script type="module">
+  import * as bootstrap from 'bootstrap'
+
+  new bootstrap.Popover(document.getElementById('popoverButton'))
+</script>
 </body>
 </html>
