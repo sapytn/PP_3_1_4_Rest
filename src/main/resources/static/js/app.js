@@ -1,22 +1,22 @@
 getUsersTable();
 
 async function findAllUsers() {
-    let allUsers = await fetch('api/users/' );
+    let allUsers = await fetch('api/users' );
     return allUsers;
 }
 
-function createRow(user) {
+function createRow(user ,role) {
     let row = `<tr> <td>${user.id}</td>
                         <td>${user.firstName}</td>
                         <td>${user.lastName}</td>
                         <td>${user.age}</td>
                         <td>${user.email}</td>
-                        <td>${user.roles}</td>
+                        <td>${user.roles.map((role)=>role.name)}</td>
                         <td>
-                            <button type="button" data-userid="${user.id}" data-action="edit" class="btn btn-info text-white btn-sm"
+                            <button type="button" data-userid="${user.id}" data-action="edit" class="btn btn-info text-white btn-sm edit-btn"
                             data-toggle="modal" data-target="#editmodal">Edit</button></td>
                         <td>
-                            <button type="button" data-userid="${user.id}" data-action="delete" class="btn btn-danger btn-sm"
+                            <button type="button" data-userid="${user.id}" data-action="delete" class="btn btn-danger btn-sm del-btn"
                             data-toggle="modal" data-target="#deletemodal">Delete</button></td>
                    </tr>`
     return row;
@@ -40,7 +40,7 @@ function getUserRolesForEdit() {
     $.each($("select[name='roles'] option:selected"), function() {
         let role = {};
         role.id = $(this).attr('id');
-        role.role = $(this).attr('name');
+        role.name = $(this).attr('name');
         allRoles.push(role);
     });
     return allRoles;
@@ -79,7 +79,7 @@ $('#editbutton').on('click', (e) => {
     console.log(editUser);
 
 
-    fetch('/api/users/', {
+    fetch('/api/users', {
         method: 'PUT',
         headers: {
             'Accept': 'application/json, text/plain, */*',
@@ -91,7 +91,7 @@ $('#editbutton').on('click', (e) => {
         $('#mainTableWithUsers').find('#' + userEditId).replaceWith(newRow);
         $('#editmodal').modal('hide');
         getUsersTable();
-        $('#nav-home-tab').tab('show');
+        $('#userTable-tab').tab('show');
     })
 });
 
@@ -119,7 +119,7 @@ $('#deletebutton').on('click', (e) => {
         $('#mainTableWithUsers').find('#' + userId).replaceWith('');
         getUsersTable();
         $('#deletemodal').modal('hide');
-        $('#nav-home-tab').tab('show');
+        $('#userTable-tab').tab('show');
     })
 });
 
@@ -158,7 +158,7 @@ $(".addnewuser").on('click', async function (e) {
         body: JSON.stringify(newUser)
     }).then(async function () {
         getUsersTable();
-        $('#nav-home-tab').tab('show');
+        $('#userTable-tab').tab('show');
     }).then(function () {
         $('#newfirstname').empty().val('')
         $('#newlastname').empty().val('')

@@ -29,7 +29,7 @@ public class AdminRestController {
 
   @GetMapping("/users/{id}")
   public ResponseEntity<User> getUser(@PathVariable Long id) {
-    User user = userService.showUser(Long.valueOf(id));
+    User user = userService.showUser(id);
     return user != null
         ? new ResponseEntity<>(user, HttpStatus.OK)
         : new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -48,8 +48,8 @@ public class AdminRestController {
   }
 
   @DeleteMapping("/users/{id}")
-  public String deleteUser(@PathVariable int id) {
-    userService.deleteUser(Long.valueOf(id));
+  public String deleteUser(@PathVariable Long id) {
+    userService.deleteUser(id);
     return "User with ID = " + id + "deleted";
   }
 }
