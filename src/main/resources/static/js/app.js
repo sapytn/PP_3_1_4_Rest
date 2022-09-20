@@ -91,7 +91,7 @@ $('#editbutton').on('click', (e) => {
         $('#mainTableWithUsers').find('#' + userEditId).replaceWith(newRow);
         $('#editmodal').modal('hide');
         getUsersTable();
-        $('#userTable-tab').tab('show');
+        $('#nav-home-tab').tab('show');
     })
 });
 
@@ -119,7 +119,7 @@ $('#deletebutton').on('click', (e) => {
         $('#mainTableWithUsers').find('#' + userId).replaceWith('');
         getUsersTable();
         $('#deletemodal').modal('hide');
-        $('#userTable-tab').tab('show');
+        $('#nav-home-tab').tab('show');
     })
 });
 
@@ -158,7 +158,7 @@ $(".addnewuser").on('click', async function (e) {
         body: JSON.stringify(newUser)
     }).then(async function () {
         getUsersTable();
-        $('#userTable-tab').tab('show');
+        $('#nav-home-tab').tab('show');
     }).then(function () {
         $('#newfirstname').empty().val('')
         $('#newlastname').empty().val('')
