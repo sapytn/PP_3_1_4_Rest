@@ -5,7 +5,7 @@ async function findAllUsers() {
     return allUsers;
 }
 
-function createRow(user ,role) {
+function createRow(user) {
     let row = `<tr> <td>${user.id}</td>
                         <td>${user.firstName}</td>
                         <td>${user.lastName}</td>
@@ -57,6 +57,7 @@ $(document).on('click', '.edit-btn', async function() {
             $('#age1').val(user.age);
             $('#email1').val(user.email);
             $('#password1').val(user.password);
+            $('#role1').val(document.getElementById('role1').value = user.roles.map(role => role.id));
         })
 })
 
@@ -91,7 +92,7 @@ $('#editbutton').on('click', (e) => {
         $('#mainTableWithUsers').find('#' + userEditId).replaceWith(newRow);
         $('#editmodal').modal('hide');
         getUsersTable();
-        $('#nav-home-tab').tab('show');
+        $('#userTable-tab').tab('show');
     })
 });
 
@@ -119,7 +120,7 @@ $('#deletebutton').on('click', (e) => {
         $('#mainTableWithUsers').find('#' + userId).replaceWith('');
         getUsersTable();
         $('#deletemodal').modal('hide');
-        $('#nav-home-tab').tab('show');
+        $('#userTable-tab').tab('show');
     })
 });
 
@@ -158,7 +159,7 @@ $(".addnewuser").on('click', async function (e) {
         body: JSON.stringify(newUser)
     }).then(async function () {
         getUsersTable();
-        $('#nav-home-tab').tab('show');
+        $('#userTable-tab').tab('show');
     }).then(function () {
         $('#newfirstname').empty().val('')
         $('#newlastname').empty().val('')
